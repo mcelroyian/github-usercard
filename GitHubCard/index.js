@@ -3,6 +3,16 @@
            https://api.github.com/users/<your name>
 */
 
+axios.get('https://api.github.com/users/mcelroyian')
+  .then( res => {
+    const container = document.querySelector('.cards')
+    container.appendChild(getUser(res.data))
+    debugger
+  })
+  .catch( err => {
+    debugger
+  })
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -13,6 +23,9 @@
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+
+
+
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -45,6 +58,59 @@ const followersArray = [];
 </div>
 
 */
+
+function getUser(userData) {
+  //create html elements
+  const make = (el) => document.createElement(el)
+  const card = make('div')
+  const img = make('img')
+  const cardInfo = make('div')
+  const title = make('h3')
+  const username = make('p')
+  const location = make('p')
+  const profile = make('p')
+  const profLink = make('a')
+  const followers = make('p')
+  const following = make('p')
+  const bio = make('p')
+  
+  //attach elements
+  card.appendChild(img)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(title)
+  cardInfo.appendChild(username)
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+ 
+  //add attributes and classes
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  title.classList.add('name')
+  username.classList.add('username')
+  profile.textContent = `Profile: ${profLink}`
+
+  //Add arguement data
+  img.src = userData.avatar_url
+  title.textContent = userData.name
+  username.textContent = userData.login
+  location.textContent = `Location ${userData.location}`
+  profLink.href = userData.html_url
+  profLink.textContent = userData.html_url
+  
+  profile.appendChild(profLink)
+  followers.textContent = `Followers: ${"XXX"}`
+  following.textContent = `Following: ${"XXX"}`
+  if (userData.bio === null) {
+    userData.bio = "Sorry, this user has not written a bio yet"
+  }
+  bio.textContent = `Bio: ${userData.bio}`
+
+  return card
+} 
 
 /* List of LS Instructors Github username's: 
   tetondan
