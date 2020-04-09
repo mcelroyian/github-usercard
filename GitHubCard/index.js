@@ -102,8 +102,8 @@ function getUser(userData) {
   profLink.textContent = userData.html_url
   
   profile.appendChild(profLink)
-  followers.textContent = `Followers: ${"XXX"}`
-  following.textContent = `Following: ${"XXX"}`
+  followers.textContent = `Followers: ${userData.followers}`
+  following.textContent = `Following: ${userData.following}`
   if (userData.bio === null) {
     userData.bio = "Sorry, this user has not written a bio yet"
   }
