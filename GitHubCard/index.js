@@ -7,19 +7,19 @@ function getUserData(userName) {
       .then( res => {
         const container = document.querySelector('.cards')
         container.appendChild(getUser(res.data))
+        return userName
+      })
+      .then(userName => {
         getUserFollowers(userName);
       })
       .catch( err => {
-        console.log("there was an error")
+        console.log("there was an error getting the main user information")
       })
 }
 
 function getUserFollowers(userName) {
-  //get url for followers from userName
-  const followersUrl = `https://api.github.com/users/${userName}/following`
-
   //grab the data from followers url
-  axios.get(followersUrl)
+  axios.get(`https://api.github.com/users/${userName}/following`)
     .then(res => {
       const followers = res.data
       // for the first 3 followers add a card with their data
@@ -30,17 +30,16 @@ function getUserFollowers(userName) {
           container.appendChild(getUser(res.data))
         })
         .catch( err => {
-          console.log("there was an error")
+          console.log("there was an error getting one of the followers information")
         })
       }
-     // followers.forEach( follower => getUserData(follower.login))
     })
     .catch(err => {
-      console.log("there was an error")
+      console.log("there was an error getting the followers of the main user")
     })
 }
 
-getUserData('tetondan')
+getUserData('ernienettles')
 
 //getUserFollowers();
 
