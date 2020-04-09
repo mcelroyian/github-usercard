@@ -39,7 +39,7 @@ function getUserFollowers(userName) {
     })
 }
 
-getUserData('ernienettles')
+getUserData('mcelroyian')
 
 //getUserFollowers();
 
@@ -106,7 +106,9 @@ function getUser(userData) {
   const followers = make('p')
   const following = make('p')
   const bio = make('p')
-  
+  const extra = make('div')
+  const graph = make('img')
+
   //attach elements
   card.appendChild(img)
   card.appendChild(cardInfo)
@@ -114,10 +116,11 @@ function getUser(userData) {
   cardInfo.appendChild(username)
   cardInfo.appendChild(location)
   cardInfo.appendChild(profile)
-  
   cardInfo.appendChild(followers)
   cardInfo.appendChild(following)
   cardInfo.appendChild(bio)
+  card.appendChild(extra)
+  extra.appendChild(graph)
  
   //add attributes and classes
   card.classList.add('card')
@@ -125,6 +128,9 @@ function getUser(userData) {
   title.classList.add('name')
   username.classList.add('username')
   profile.textContent = `Profile: ${profLink}`
+  extra.classList.add('extra', 'hide')
+  graph.src = `http://ghchart.rshah.org/${userData.login}`
+  graph.alt = `${userData.name}'s Github Activity`
 
   //Add arguement data
   img.src = userData.avatar_url
@@ -142,6 +148,11 @@ function getUser(userData) {
   }
   bio.textContent = `Bio: ${userData.bio}`
 
+  card.addEventListener('click', e => {
+    extra.classList.toggle('hide')
+  })
+
+
   return card
 } 
 
@@ -152,3 +163,4 @@ function getUser(userData) {
   luishrd
   bigknell
 */
+
