@@ -2,16 +2,47 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+function getUserData(userName) {
+    axios.get(`https://api.github.com/users/${userName}`)
+      .then( res => {
+        const container = document.querySelector('.cards')
+        container.appendChild(getUser(res.data))
+        getUserFollowers(userName);
+      })
+      .catch( err => {
+        console.log("there was an error")
+      })
+}
 
-axios.get('https://api.github.com/users/mcelroyian')
-  .then( res => {
-    const container = document.querySelector('.cards')
-    container.appendChild(getUser(res.data))
-    debugger
-  })
-  .catch( err => {
-    debugger
-  })
+function getUserFollowers(userName) {
+  //get url for followers from userName
+  const followersUrl = `https://api.github.com/users/${userName}/following`
+
+  //grab the data from followers url
+  axios.get(followersUrl)
+    .then(res => {
+      const followers = res.data
+      // for the first 3 followers add a card with their data
+      for (i = 0; i < 2; i++) {
+        axios.get(`https://api.github.com/users/${followers[i].login}`)
+        .then( res => {
+          const container = document.querySelector('.cards')
+          container.appendChild(getUser(res.data))
+        })
+        .catch( err => {
+          console.log("there was an error")
+        })
+      }
+     // followers.forEach( follower => getUserData(follower.login))
+    })
+    .catch(err => {
+      console.log("there was an error")
+    })
+}
+
+getUserData('tetondan')
+
+//getUserFollowers();
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -37,7 +68,10 @@ axios.get('https://api.github.com/users/mcelroyian')
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+//const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+//followersArray.forEach(person => getUserData(person))
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
