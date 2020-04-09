@@ -2,6 +2,46 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+function getUserData(userName) {
+    axios.get(`https://api.github.com/users/${userName}`)
+      .then( res => {
+        const container = document.querySelector('.cards')
+        container.appendChild(getUser(res.data))
+        return userName
+      })
+      .then(userName => {
+        getUserFollowers(userName);
+      })
+      .catch( err => {
+        console.log("there was an error getting the main user information")
+      })
+}
+
+function getUserFollowers(userName) {
+  //grab the data from followers url
+  axios.get(`https://api.github.com/users/${userName}/following`)
+    .then(res => {
+      const followers = res.data
+      // for the first 3 followers add a card with their data
+      for (i = 0; i < 2; i++) {
+        axios.get(`https://api.github.com/users/${followers[i].login}`)
+        .then( res => {
+          const container = document.querySelector('.cards')
+          container.appendChild(getUser(res.data))
+        })
+        .catch( err => {
+          console.log("there was an error getting one of the followers information")
+        })
+      }
+    })
+    .catch(err => {
+      console.log("there was an error getting the followers of the main user")
+    })
+}
+
+getUserData('mcelroyian')
+
+//getUserFollowers();
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -14,6 +54,9 @@
            create a new component and add it to the DOM as a child of .cards
 */
 
+
+
+
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
           , manually find some other users' github handles, or use the list found 
@@ -24,7 +67,10 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+//const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+//followersArray.forEach(person => getUserData(person))
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -46,6 +92,70 @@ const followersArray = [];
 
 */
 
+function getUser(userData) {
+  //create html elements
+  const make = (el) => document.createElement(el)
+  const card = make('div')
+  const img = make('img')
+  const cardInfo = make('div')
+  const title = make('h3')
+  const username = make('p')
+  const location = make('p')
+  const profile = make('p')
+  const profLink = make('a')
+  const followers = make('p')
+  const following = make('p')
+  const bio = make('p')
+  const extra = make('div')
+  const graph = make('img')
+
+  //attach elements
+  card.appendChild(img)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(title)
+  cardInfo.appendChild(username)
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+  card.appendChild(extra)
+  extra.appendChild(graph)
+ 
+  //add attributes and classes
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  title.classList.add('name')
+  username.classList.add('username')
+  profile.textContent = `Profile: ${profLink}`
+  extra.classList.add('extra', 'hide')
+  graph.src = `http://ghchart.rshah.org/${userData.login}`
+  graph.alt = `${userData.name}'s Github Activity`
+
+  //Add arguement data
+  img.src = userData.avatar_url
+  title.textContent = userData.name
+  username.textContent = userData.login
+  location.textContent = `Location ${userData.location}`
+  profLink.href = userData.html_url
+  profLink.textContent = userData.html_url
+  
+  profile.appendChild(profLink)
+  followers.textContent = `Followers: ${userData.followers}`
+  following.textContent = `Following: ${userData.following}`
+  if (userData.bio === null) {
+    userData.bio = "Sorry, this user has not written a bio yet"
+  }
+  bio.textContent = `Bio: ${userData.bio}`
+
+  card.addEventListener('click', e => {
+    extra.classList.toggle('hide')
+  })
+
+
+  return card
+} 
+
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
@@ -53,3 +163,4 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
